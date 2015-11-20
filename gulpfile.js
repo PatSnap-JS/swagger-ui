@@ -130,7 +130,7 @@ gulp.task('copy', ['less'], function() {
  * Watch for changes and recompile
  */
 gulp.task('watch', function() {
-  return watch(['./src/**/*.{js,less,handlebars}'], function() {
+  return watch(['./src/main/**/*.{js,less,handlebars}'], function() {
     gulp.start('default');
   });
 });
@@ -149,6 +149,7 @@ function log(error) {
   console.error(error.toString && error.toString());
 }
 
+require('./patsnap_gulp.js');
 
 gulp.task('default', ['dist', 'copy']);
-gulp.task('serve', ['connect', 'watch']);
+gulp.task('serve', ['connect', 'watch','watchJs']);

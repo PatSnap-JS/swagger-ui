@@ -6,7 +6,8 @@ module.exports = Object.freeze({
 
 	method:'get',
 	headers:{
-		'PRIVATE-TOKEN':'-QqmV1eGs7WQqCkeupDz'
+		//'PRIVATE-TOKEN':'-QqmV1eGs7WQqCkeupDz'
+		'PRIVATE-TOKEN':'xXrXcDDtFrNYHxoy1tkp'
 	},
 	responseType: 'json',
 	transformResponse: [function (data) {

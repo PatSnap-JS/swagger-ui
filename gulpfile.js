@@ -151,5 +151,7 @@ function log(error) {
 
 require('./patsnap_gulp.js');
 
-gulp.task('default', ['dist', 'copy']);
+gulp.task('default', ['dist', 'copy'],function(done){
+    gulp.start('react',done);
+});
 gulp.task('serve', ['connect', 'watch','watchJs']);

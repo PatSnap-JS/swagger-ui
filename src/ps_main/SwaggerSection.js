@@ -1,6 +1,6 @@
 
 var React = require('react');
-
+var _ = require('lodash');
 
 var SwaggerSection = React.createClass({
 	propTypes:{
@@ -12,7 +12,7 @@ var SwaggerSection = React.createClass({
 			this.swaggerUi = new SwaggerUi({
 				url: 'http://127.0.0.1/v2/swagger.json',
 				spec: spec,
-				dom_id: "swagger-ui-container"
+				dom_id: this.containerId
 			});
 			this.swaggerUi.load();
 		}
@@ -23,10 +23,11 @@ var SwaggerSection = React.createClass({
 	componentWillReceiveProps:function(){
 		this.updateView();
 	},
-
+	containerId : 'swagger-ui-container',
 	render: function() {
+		this.containerId = _.uniqueId('swagger-ui-container-');
 		return (
-			<div id="swagger-ui-container" className="swagger-ui-wrap">
+			<div id={this.containerId} className="swagger-ui-wrap">
 
 			</div>
 		);

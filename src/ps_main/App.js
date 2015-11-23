@@ -5,21 +5,21 @@ var ReactPropTypes = React.PropTypes;
 var Header = require('./Header');
 var SwaggerSection = require('./SwaggerSection');
 
-var json = require('./weather.json');
+var json = require('./sw.json');
 
 var App = React.createClass({
 	mixins:[],
 	getInitialState:function(){
 		return {}
 	},
-	onStoreChange: function() {
+	updateSwaggers: function(files) {
 
 	},
 
 	render: function() {
 		return (
 				<div>
-					<Header/>
+					<Header onClickView={updateSwaggers}/>
 					<SwaggerSection spec={json}/>
 					</div>
 		);

@@ -30,7 +30,7 @@ var Header = React.createClass({
 	getProject:function(){
 		var comp = this;
 		return axios(Object.assign({},gitHttpConf,{
-			url:`${gitHttpConf.host}/groups/100`
+			url:`${gitHttpConf.api}/groups/100`
 		})).then((data)=>data.data.projects)
 		.then(function(projects){
 			projects.forEach(function(o){
@@ -46,7 +46,7 @@ var Header = React.createClass({
 		if(projectId){
 			comp.setState({branches:[]});
 			return axios(Object.assign({},gitHttpConf,{
-				url:`${gitHttpConf.host}/projects/${projectId}/repository/branches`
+				url:`${gitHttpConf.api}/projects/${projectId}/repository/branches`
 			}))
 					.then((data)=>data.data)
 					.then(function(data){
@@ -60,21 +60,22 @@ var Header = React.createClass({
 		var formData = getFormData(evt.target);
 
 		axios(Object.assign({},gitHttpConf,{
-			url:`${gitHttpConf.host}/projects/${formData.projectId}/repository/tree`,
+			url:`${gitHttpConf.api}/projects/${formData.projectId}/repository/tree`,
 			params:{ref_name:formData.branch}
 		}))
 				.then((data)=>data.data)
 				.then(function(files){
-					var fileUrls = files.filter(function(fileObj){
+					var fileData = files.filter(function(fileObj){
 						var ext = path.extname(fileObj.name);
 						return ext == '.json' || ext == '.ymal';
 					}).map(function(fileObj){
 						return {
+							id:fileObj.id,
 							name:fileObj.name,
 							url:`${gitHttpConf.host}/swagger-doc/${projectNameMap.get(formData.projectId)}/raw/${formData.branch}/${fileObj.name}`
 						};
 					});
-					return files;
+					return fileData;
 				})
 		.then(function(files){
 			comp.props.onClickView(files);

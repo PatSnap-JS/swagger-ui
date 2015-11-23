@@ -272,3 +272,6 @@ h2 {
 #btn-view:hover {
   background-color: #547f00;
 }
+.ps-swagger-block {
+  padding-top: 3rem;
+}

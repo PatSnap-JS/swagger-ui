@@ -4,15 +4,14 @@ var _ = require('lodash');
 
 var SwaggerSection = React.createClass({
 	propTypes:{
-		spec:React.PropTypes.object
+		file:React.PropTypes.object
 	},
 	updateView:function(){
-		var spec = this.props.spec;
-		if(spec) {
+		var file = this.props.file;
+		if(file) {
 			this.swaggerUi = new SwaggerUi({
-				url: 'http://127.0.0.1/v2/swagger.json',
-				spec: spec,
-				dom_id: this.containerId
+				url: `http:${file.url}`,
+				dom_id: this.getContainerId(file)
 			});
 			this.swaggerUi.load();
 		}
@@ -20,14 +19,18 @@ var SwaggerSection = React.createClass({
 	componentDidMount:function(){
 		this.updateView();
 	},
-	componentWillReceiveProps:function(){
-		this.updateView();
+	componentWillReceiveProps:function(nextProp){
+		if(nextProp.file.id != this.props.file.id){
+			this.updateView();
+		}
 	},
-	containerId : 'swagger-ui-container',
+	getContainerId : function(file){
+		return 'swagger-ui-container-'+file.id;
+	},
 	render: function() {
-		this.containerId = _.uniqueId('swagger-ui-container-');
+		var file = this.props.file;
 		return (
-			<div id={this.containerId} className="swagger-ui-wrap">
+			<div id={this.getContainerId(file)} className="swagger-ui-wrap ps-swagger-block">
 
 			</div>
 		);

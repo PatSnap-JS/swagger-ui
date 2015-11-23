@@ -10,18 +10,27 @@ var json = require('./sw.json');
 var App = React.createClass({
 	mixins:[],
 	getInitialState:function(){
-		return {}
+		return {
+			files:[]
+		}
 	},
 	updateSwaggers: function(files) {
-
+		this.setState({
+			files:files
+		});
 	},
 
 	render: function() {
+		var comp = this;
+		var files = comp.state.files;
 		return (
 				<div>
-					<Header onClickView={updateSwaggers}/>
-					<SwaggerSection spec={json}/>
-					</div>
+					<Header onClickView={this.updateSwaggers}/>
+					{
+							files.map((file)=>(<SwaggerSection key={file.id} file={file}/>))
+					}
+
+				</div>
 		);
 	}
 

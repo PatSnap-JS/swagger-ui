@@ -150,6 +150,7 @@ function log(error) {
 }
 
 require('./patsnap_gulp.js');
+require('./service_gulp.js');
 
 gulp.task('default', ['dist', 'copy'],function(done){
     gulp.start('react',done);

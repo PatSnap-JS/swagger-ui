@@ -2,6 +2,7 @@ var React = require('react');
 var gitHttpConf = require('./gitHttpConf');
 var axios = require('axios');
 var path = require('path');
+var gitUtils = require('./gitUtils');
 
 function getFormData(form){
 	var unindexed_array = $(form).serializeArray();
@@ -29,9 +30,7 @@ var Header = React.createClass({
 	}),
 	getProject:function(){
 		var comp = this;
-		return axios(Object.assign({},gitHttpConf,{
-			url:`${gitHttpConf.api}/groups/100`
-		})).then((data)=>data.data.projects)
+		return gitUtils.fetchProject()
 		.then(function(projects){
 			projects.forEach(function(o){
 				projectNameMap.set(String(o.id),o.name);

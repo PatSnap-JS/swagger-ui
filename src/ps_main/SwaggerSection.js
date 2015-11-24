@@ -10,7 +10,7 @@ var SwaggerSection = React.createClass({
 		var file = this.props.file;
 		if(file) {
 			this.swaggerUi = new SwaggerUi({
-				url: `http:${file.url}`,
+				url: file.url,
 				dom_id: this.getContainerId(file)
 			});
 			this.swaggerUi.load();

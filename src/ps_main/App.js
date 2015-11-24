@@ -5,7 +5,6 @@ var ReactPropTypes = React.PropTypes;
 var Header = require('./Header');
 var SwaggerSection = require('./SwaggerSection');
 
-var json = require('./sw.json');
 
 var App = React.createClass({
 	mixins:[],

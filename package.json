@@ -35,18 +35,21 @@
     "docco": "^0.7.0",
     "event-stream": "^3.2.2",
     "express": "^4.12.0",
+    "glob": "^6.0.1",
     "gulp": "^3.8.11",
     "gulp-babel": "^6.1.0",
     "gulp-clean": "^0.3.1",
     "gulp-concat": "^2.6.0",
     "gulp-connect": "^2.2.0",
     "gulp-declare": "^0.3.0",
+    "gulp-flatten": "^0.2.0",
     "gulp-handlebars": "^3.0.1",
     "gulp-header": "^1.2.2",
     "gulp-jshint": "^1.10.0",
     "gulp-less": "^3.0.1",
     "gulp-order": "^1.1.1",
     "gulp-rename": "^1.2.0",
+    "gulp-run": "^1.6.11",
     "gulp-sourcemaps": "^1.6.0",
     "gulp-uglify": "^1.1.0",
     "gulp-watch": "^4.1.1",
@@ -61,11 +64,13 @@
   },
   "dependencies": {
     "axios": "^0.7.0",
+    "co": "^4.6.0",
     "gulp-git": "^1.6.0",
     "immutable": "^3.7.5",
     "justore": "^0.3.1",
     "lodash": "^3.10.1",
     "react": "^0.14.3",
-    "react-dom": "^0.14.3"
+    "react-dom": "^0.14.3",
+    "swagger": "^0.7.5"
   }
 }

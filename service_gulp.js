@@ -75,11 +75,27 @@ function copyFromServTemp(folderName){
 
 function replaceFile(fileFullPath){
 
+	function addFakeRoute(oriJson){
+		const _ = require('lodash');
+		const fakeKey = 'x-swagger-router-controller';
+		var jsonPaths = Object.keys(oriJson.paths);
+		jsonPaths.forEach(function(pthName){
+			var pth = oriJson.paths[pthName];
+			Object.keys(pth).forEach(function(method){
+				if(!pth[method][fakeKey]){
+					pth[method][fakeKey] = _.uniqueId('fakeCtrlByGulp')
+				}
+			})
+		});
+		return oriJson;
+	}
+
 	return new Promise(function(res,rej){
 
 		var fileName = path.basename(fileFullPath,'.json');
 
 		var json = require(path.join(swDocPath,`${fileName}.json`));
+		json = addFakeRoute(json);
 		var json2yaml = require('json2yaml');
 		var yamlText = json2yaml.stringify(json);
 
@@ -162,4 +178,4 @@ gulp.task('nodeService',['cleanWorkspace'], function() {
 });
 
 //replaceFile('test');
-//gulp.start('nodeService');
+gulp.start('nodeService');

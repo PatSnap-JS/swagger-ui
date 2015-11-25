@@ -16,6 +16,7 @@ function getFormData(form){
 }
 
 var projectNameMap = new Map();
+var defaultBranchMap = new Map();
 
 var Header = React.createClass({
 
@@ -34,6 +35,7 @@ var Header = React.createClass({
 		.then(function(projects){
 			projects.forEach(function(o){
 				projectNameMap.set(String(o.id),o.name);
+				defaultBranchMap.set(String(o.id),o.default_branch)
 			});
 
 			comp.setState({projects:projects})
@@ -90,7 +92,7 @@ var Header = React.createClass({
 		return (
 				<header id="header">
 				<div className="swagger-ui-wrap">
-					<a id="logo" href="http://swagger.io">swagger</a>
+					<a id="logo" href="http://swagger.io">Patsnap swagger</a>
 					<form onSubmit={comp.fetchFiles} id='api_selector'>
 						<div className='input'>
 							<select name="projectId" onChange={comp.projectChanged}>

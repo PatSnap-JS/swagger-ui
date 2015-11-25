@@ -6,3 +6,5 @@
 
 Start Server:
 `$ npm run serve`
+
+Visit `localhost:8080` for UI

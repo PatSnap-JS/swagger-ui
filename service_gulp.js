@@ -20,6 +20,20 @@ var clean = require('gulp-clean');
 var gitUtils = require('./src/ps_main/gitUtils.js');
 
 
+function exec(str){
+	var cmd = require('child_process').exec;
+	return new Promise(function(res,rej){
+		cmd(str, function (err, stdout, stderr) {
+			if(err || stderr){
+				rej(err || stderr)
+			}
+			if(stdout){
+				res(stdout)
+			}
+		});
+	});
+}
+
 
 var cwdOpt = {cwd:workspace};
 
@@ -31,6 +45,8 @@ var swServPath = path.join(workspace,'swagger-serv');
 function getRepos(){
 	return gitUtils.fetchProject()
 }
+
+
 
 
 function clone(url){
@@ -129,18 +145,22 @@ gulp.task('nodeService',['cleanWorkspace'], function() {
 					return replaceFile(fileFullPath)
 				});
 		});
-
-
 		yield Promise.all(createJobs);
 	}
 
-	function *copyDocOut(){
+	function projectUpRunner(fileList){//servUpper
+		var upJobs = fileList.map(function(fileFullPath){
+			var name = path.basename(fileFullPath,'.json');
+			return exec(`cd ${path.join(swServPath,name)};npm run mock;`)
+		});
+		return Promise.all(upJobs);
+	}
 
+	function *copyDocOut(){
 		var targetPath = path.join(swDocPathTemp,'**/*.json');
 		var stream = gulp.src([targetPath])
 				.pipe(flatten())
 				.pipe(gulp.dest(path.join(swDocPath)));
-
 		yield promisfyStream(stream);
 		return new Promise(function(res,rej){
 			glob(targetPath, function (err, files) {
@@ -151,10 +171,8 @@ gulp.task('nodeService',['cleanWorkspace'], function() {
 	}
 
 	function removeDocTemp(){
-
 		var stream = gulp.src([path.join(swDocPathTemp,'/')], {read: false})
 				.pipe(clean());
-
 		return promisfyStream(stream);
 	}
 
@@ -170,6 +188,8 @@ gulp.task('nodeService',['cleanWorkspace'], function() {
 
 
 		yield projectCreateRunner(fileList);
+
+		projectUpRunner(fileList);
 
 	}
 

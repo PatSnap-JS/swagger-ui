@@ -56,6 +56,7 @@
     "gulp-wrap": "^0.11.0",
     "http-server": "git+https://github.com/nodeapps/http-server.git",
     "jshint-stylish": "^1.0.1",
+    "json2yaml": "^1.0.3",
     "less": "^2.4.0",
     "mocha": "^2.1.0",
     "selenium-webdriver": "^2.45.0",
@@ -71,6 +72,7 @@
     "lodash": "^3.10.1",
     "react": "^0.14.3",
     "react-dom": "^0.14.3",
-    "swagger": "^0.7.5"
+    "swagger": "^0.7.5",
+    "swagger-converter": "^1.0.1"
   }
 }

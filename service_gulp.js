@@ -73,10 +73,26 @@ function copyFromServTemp(folderName){
 	return promisfyStream(stream);
 }
 
-function replaceFile(name){
-	var stream = gulp.src([path.join(swDocPath,`${name}.json`)])
-			.pipe(gulp.dest(path.join(swServPath,name,'api','swagger')));
-	return promisfyStream(stream);
+function replaceFile(fileFullPath){
+
+	return new Promise(function(res,rej){
+
+		var fileName = path.basename(fileFullPath,'.json');
+
+		var json = require(path.join(swDocPath,`${fileName}.json`));
+		var json2yaml = require('json2yaml');
+		var yamlText = json2yaml.stringify(json);
+
+
+		fs.writeFile(path.join(swServPath,fileName,'api','swagger',`swagger.yaml`),yamlText,function(err){
+			if(err){
+				rej(err);
+			}else{
+				res(yamlText)
+			}
+		});
+	});
+
 }
 
 
@@ -94,7 +110,7 @@ gulp.task('nodeService',['cleanWorkspace'], function() {
 			var name = path.basename(fileFullPath,'.json');
 			return copyFromServTemp(name)
 				.then(function(){
-					return replaceFile(name)
+					return replaceFile(fileFullPath)
 				});
 		});
 
@@ -146,4 +162,4 @@ gulp.task('nodeService',['cleanWorkspace'], function() {
 });
 
 //replaceFile('test');
-gulp.start('nodeService');
+//gulp.start('nodeService');

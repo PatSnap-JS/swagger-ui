@@ -198,4 +198,4 @@ gulp.task('nodeService',['cleanWorkspace'], function() {
 });
 
 //replaceFile('test');
-gulp.start('nodeService');
+//gulp.start('nodeService');

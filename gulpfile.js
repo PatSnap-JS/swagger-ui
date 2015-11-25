@@ -1,6 +1,7 @@
 'use strict';
 
 var gulp = require('gulp');
+var gulpSequence = require('gulp-sequence');
 var es = require('event-stream');
 var clean = require('gulp-clean');
 var concat = require('gulp-concat');
@@ -155,4 +156,7 @@ require('./service_gulp.js');
 gulp.task('default', ['dist', 'copy'],function(done){
     gulp.start('react',done);
 });
-gulp.task('serve', ['connect', 'watch','watchJs']);
+
+//gulp.task('serve', ['connect', 'watch','watchJs']);
+
+gulp.task('serve', ['default','connect','nodeService']);

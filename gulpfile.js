@@ -125,6 +125,11 @@ gulp.task('copy', ['less'], function() {
     .src(['./src/main/html/**/*'])
     .pipe(gulp.dest('./dist'))
     .on('error', log);
+
+    gulp
+        .src(['./src/main/mdl/**/*'])
+        .pipe(gulp.dest('./dist/mdl'))
+        .on('error', log);
 });
 
 /**
@@ -142,7 +147,7 @@ gulp.task('watch', function() {
 gulp.task('connect', function() {
   connect.server({
     root: 'dist',
-    livereload: true
+    livereload: false
   });
 });
 
@@ -157,6 +162,6 @@ gulp.task('default', ['dist', 'copy'],function(done){
     gulp.start('react',done);
 });
 
-//gulp.task('serve', ['connect', 'watch','watchJs']);
+//gulp.task('serve', ['default','connect', 'watch','watchJs']);
 
 gulp.task('serve', ['default','connect','nodeService']);

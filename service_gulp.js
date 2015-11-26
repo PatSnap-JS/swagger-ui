@@ -13,6 +13,8 @@ var glob = require("glob");
 
 
 var workspace = path.join(__dirname,'./workspace');
+var dist = path.join(__dirname,'./dist');
+
 var repoGroup= 'git@git.patsnap.com:swagger-doc';
 var gitHttpConf = require('./src/ps_main/gitHttpConf.js');
 var clean = require('gulp-clean');
@@ -46,7 +48,13 @@ function getRepos(){
 	return gitUtils.fetchProject()
 }
 
-
+function getDocHostObj(host){
+	var parse = require('url').parse;
+	var h = host.indexOf('http')<=0 ? `http://${host}`:host;
+	var o = parse(h);
+	o.port = o.port || 80;
+	return o;
+}
 
 
 function clone(url){
@@ -89,41 +97,68 @@ function copyFromServTemp(folderName){
 	return promisfyStream(stream);
 }
 
+function writeFile(target,str){
+	return new Promise(function(res,rej){
+		fs.writeFile(target,str,function(err){
+			if(err){rej(err);}else{res(str)}
+		});
+	});
+}
+
+var portUsage = {
+	'8080':['UI holder']
+};
+function writePortUsage(){
+	return writeFile(path.join(dist,`port_usage.json`),JSON.stringify(portUsage));
+}
+
+function isLocalhost(json){
+	var hostObj = getDocHostObj(json.host);
+	return (hostObj.hostname == 'localhost' || hostObj.hostname == '127.0.0.1');
+}
+
 function replaceFile(fileFullPath){
 
 	function addFakeRoute(oriJson){
 		const _ = require('lodash');
 		const fakeKey = 'x-swagger-router-controller';
-		var jsonPaths = Object.keys(oriJson.paths);
-		jsonPaths.forEach(function(pthName){
-			var pth = oriJson.paths[pthName];
-			Object.keys(pth).forEach(function(method){
-				if(!pth[method][fakeKey]){
-					pth[method][fakeKey] = _.uniqueId('fakeCtrlByGulp')
-				}
-			})
-		});
+		var hostObj = getDocHostObj(oriJson.host);
+
+		if(isLocalhost(oriJson)){//Obly for localhost apis
+			var jsonPaths = Object.keys(oriJson.paths);
+			jsonPaths.forEach(function(pthName){
+				var pth = oriJson.paths[pthName];
+				Object.keys(pth).forEach(function(method){
+					if(!pth[method][fakeKey]){
+						pth[method][fakeKey] = _.uniqueId('fakeCtrlByGulp')
+					}
+				})
+			});
+
+		}
+
 		return oriJson;
 	}
 
-	return new Promise(function(res,rej){
 
-		var fileName = path.basename(fileFullPath,'.json');
+	function logPortUsage(json,fileName){
+		var hostObj = getDocHostObj(json.host);
+		if(isLocalhost(json)){
+			let port = hostObj.port;
+			portUsage[port] = portUsage[port] ? portUsage[port].push(fileName) : [fileName];
+		}
+	}
 
-		var json = require(path.join(swDocPath,`${fileName}.json`));
-		json = addFakeRoute(json);
-		var json2yaml = require('json2yaml');
-		var yamlText = json2yaml.stringify(json);
+	var fileName = path.basename(fileFullPath,'.json');
 
+	var json = require(path.join(swDocPath,`${fileName}.json`));
+	json = addFakeRoute(json);
+	var json2yaml = require('json2yaml');
+	var yamlText = json2yaml.stringify(json);
 
-		fs.writeFile(path.join(swServPath,fileName,'api','swagger',`swagger.yaml`),yamlText,function(err){
-			if(err){
-				rej(err);
-			}else{
-				res(yamlText)
-			}
-		});
-	});
+	logPortUsage(json,fileName);
+
+	return writeFile(path.join(swServPath,fileName,'api','swagger',`swagger.yaml`),yamlText);
 
 }
 
@@ -190,6 +225,8 @@ gulp.task('nodeService',['cleanWorkspace'], function() {
 		yield projectCreateRunner(fileList);
 
 		projectUpRunner(fileList);
+
+		writePortUsage()
 
 	}
 

@@ -22,7 +22,8 @@ var Header = React.createClass({
 
 	getDefaultProps:function(){
 		return {
-			onClickView:_.noop()
+			onClickView:_.noop(),
+			onToggleUsage:_.noop()
 		}
 	},
 	getInitialState:()=>({
@@ -92,7 +93,7 @@ var Header = React.createClass({
 		return (
 				<header id="header">
 				<div className="swagger-ui-wrap">
-					<a id="logo" href="http://swagger.io">Patsnap swagger</a>
+					<a onClick={comp.props.onToggleUsage} id="logo">Port Watcher</a>
 					<form onSubmit={comp.fetchFiles} id='api_selector'>
 						<div className='input'>
 							<select name="projectId" onChange={comp.projectChanged}>

@@ -15,14 +15,14 @@
   "scripts": {
     "build": "gulp",
     "serve": "gulp serve",
-    "prejshint": "gulp",
+    "reload": "gulp nodeService",
     "jshint": "jshint .",
     "pretest": "npm run jshint",
     "test": "mocha"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/swagger-api/swagger-ui.git"
+    "url": "git@github.com:PatSnap-JS/swagger-ui.git"
   },
   "readmeFilename": "README.md",
   "devDependencies": {

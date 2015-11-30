@@ -1,22 +1,26 @@
-###
-# swagger-ui-builder - https://github.com/swagger-api/swagger-ui/
-# Container for building the swagger-ui static site
-#
-# Build: docker build -t swagger-ui-builder .
-# Run:   docker run -v $PWD/dist:/build/dist swagger-ui-builder
-#
-###
+FROM local-dtr.patsnap.com/patsnap/node4.1-nginx
 
-FROM    ubuntu:14.04
-MAINTAINER dnephin@gmail.com
 
-ENV     DEBIAN_FRONTEND noninteractive
 
-RUN     apt-get update && apt-get install -y git npm nodejs openjdk-7-jre
-RUN     ln -s /usr/bin/nodejs /usr/local/bin/node
+ADD container_files/id_rsa /root/.ssh/id_rsa
+RUN chmod 600 /root/.ssh/id_rsa
+RUN echo -e "Host *\n\tStrictHostKeyChecking no\n" >> /root/.ssh/config
 
-WORKDIR /build
-ADD     package.json    /build/package.json
-RUN     npm install
-ADD     .   /build
-CMD     ./node_modules/gulp/bin/gulp.js serve
+ADD container_files /
+ADD . /data/swagger-ui
+WORKDIR /data/swagger-ui
+
+RUN git config --global user.email "swagger.doc@patsnap.com"
+RUN git config --global user.name "doc swagger"
+
+RUN \
+    npm set registry=http://192.168.3.115:4873 \
+    && npm install swagger gulp -g \
+    && npm install \
+    && npm run serve
+
+
+
+EXPOSE 3000-10000
+
+

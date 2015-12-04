@@ -8,8 +8,9 @@ WORKDIR /data/swagger-ui
 RUN \
     npm set registry=http://192.168.3.115:4873 \
     && npm install swagger gulp -g \
-    && npm install \
-    && npm run serve
+    && npm install
+    
+CMD	npm run serve
 
 EXPOSE 3000-10000
 
